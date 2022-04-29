@@ -1,7 +1,9 @@
 ## <center> Michelle Athay and Megan Kenny's Computational Physics Final Project
 
 
-  Here we solve Stoke's 2nd problem: diffusion of heat through a solid object. Specifically, we study how the temperature inside a rotating asteroid changes as it receives heat from the Sun. The simplest equation to describe this problem is the 1D diffusion equation
+  Here we solve Stoke's 2nd problem: diffusion of heat through a solid object. Specifically, we study how the temperature inside a rotating asteroid changes as it receives heat from the Sun. The simplest equation to describe this problem is the 1D diffusion equation:
+  
+  <img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1">
 
   <img src="https://render.githubusercontent.com/render/math?math= \frac{\partial T}{\partial t} = \kappa \frac{\partial^{2} T}{\partial z^{2}} ">
 
