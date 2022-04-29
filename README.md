@@ -1,8 +1,9 @@
-<center> ## Michelle Athay and Megan Kenny's Computational Physics Final Project
+## <center> Michelle Athay and Megan Kenny's Computational Physics Final Project
 
-Here we solve Stoke's 2nd problem: diffusion of heat through a solid object. Specifically, we study how the temperature inside a rotating asteroid changes as it receives heat from the Sun. The simplest equation to describe this problem is the 1D diffusion equation
 
-## $\frac{\partial T}{\partial t} = \kappa \frac{\partial^{2} T}{\partial z^{2}} $,
+  Here we solve Stoke's 2nd problem: diffusion of heat through a solid object. Specifically, we study how the temperature inside a rotating asteroid changes as it receives heat from the Sun. The simplest equation to describe this problem is the 1D diffusion equation
+
+## \frac{\partial T}{\partial t} = \kappa \frac{\partial^{2} T}{\partial z^{2}} ,
 
 where $\kappa$ is the diffusion coefficient, describing how quickly the heat transfer takes place. The temperature at the surface can be described as $ T(t, 0) = T_{0}cos(\omega t)$ and appropriate constants $\omega$ and $\kappa$ as well as appropriate boundary conditions can be chosen. Asteroids typically rotate with perdiods between four hours and 24 hours and have diameters ranging from 10m to 500km! We explore different parameter values based on known quantities (or ranges of quantities) but in some cases have to make  guesses for parameters for which we could not find data. 
   
