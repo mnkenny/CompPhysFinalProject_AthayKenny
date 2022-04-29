@@ -14,10 +14,10 @@ This one-dimensional heat equation is analytically solvable, so we can compare o
 
 for the following parameter values:
   
-L (diameter) = 50 m, total time = 50,000 s, incoming temperature = 1 K, $\kappa$ (diffusion coefficient) = 1.5 m$^{2}$/s, and omega (rotation rate) = 5e-4 Hz.
+L (diameter) = 50 m, total time = 50,000 s, incoming temperature = 1 K, &kappa (diffusion coefficient) = 1.5 m^2/s, and &omega (rotation rate) = 5e-4 Hz.
   
 We have added an additional term to the simple (1D) diffusion equation- a radiative loss term- to explore more interesting physics: what happens when the heat can leak out the asteroid. The modified heat/diffusion equation is now no longer analytically solvable, so we rely on thenumerical scheme to illuminate what's going on! 
   
   
   
->>>>>>> 4befde755f0aafd055392f96243b22a5c57ebd5d
+
