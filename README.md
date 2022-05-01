@@ -1,5 +1,30 @@
 ## <center> Michelle Athay and Megan Kenny's Computational Physics Final Project
 
+For this situation, the full Navier-Stokes equations reduce to
+\begin{equation}
+    \frac{\partial T}{\partial t} = \kappa \frac{\partial^2 T}{\partial z^2}. \label{eq1}\tag{1a}
+\end{equation}
+The linear diffusion equation above has a well known and exact solution. Assuming that the upper boundary where the fluid velocity equals zero is in fact infinitely far away, there is no steady state solution because the velocity profile will develop overtime according to,
+
+\begin{equation}
+    T(z,t)=1 - erf(\frac{z}{2 \sqrt{\kappa t}}). \label{eq2}\tag{2a}
+\end{equation}
+
+Equation \ref{eq2} is the exact analytical solution to equation \ref{eq1}. The region of fluid affected by the velocity of the plate is confined to a boundary layer $\propto \sqrt{\kappa t}$ which grows over time at a rate $\propto \sqrt{\kappa /t}$. 
+
+we now use finite differencing to step equation  forward in time. Taking the left hand side we approximate $\frac{\partial T}{\partial t}$ using a forward Euler approach so that
+\\[
+\frac{\partial T}{\partial t}(z_n,t_i)=\frac{ T(z_n,t_{i+1}) - T(z_n,t_i)}{\Delta t}, \label{eq3}\tag{3a}
+\\]
+where $z_n$ is the current spatial cell, $z_{n+1}$ and $z_{n-1}$ would be neighboring spatial cells, $t_i$ is the current time, $t_{i+1}$ is the time we want to solve for, and $\Delta t = t_{i+1} - t_i$. Higher order terms have been dropped. 
+For the right hand side of Eq. \ref{eq1}  we use centered differencing which yields
+\\[
+\kappa\frac{\partial^2 T}{\partial z^2}(z_n,t_i)=\kappa\frac{ T(z_{n+1},t_i) + T(z_{n-1},t_i) - 2T(z_n,t_i)}{\Delta z^2},    \label{eq4}\tag{4a} 
+\\] 
+where we have again dropped the higher order terms. Setting both sides equal and rearranging to solve for $T(z_n,t_{i+1})$ gives us
+\\[
+  T(z_n,t_{i+1}) = D(T(z_{n+1},t_i) + T(z_{n-1},t_i) + (1-2D)T(z_n,t_i), \qquad D=\frac{\kappa\Delta t}{\Delta z^2}.
+\\]
 
   Here we solve Stoke's 2nd problem: diffusion of heat through a solid object. Specifically, we study how the temperature inside a rotating asteroid changes as it receives heat from the Sun. The simplest equation to describe this problem is the 1D diffusion equation:
  
