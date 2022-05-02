@@ -18,6 +18,7 @@ L (diameter) = 50 m, total time = 50,000 s, incoming temperature = 1 K, <img src
   
 We have added an additional term to the simple (1D) diffusion equation- a radiative loss term- to explore more interesting physics: what happens when the heat can leak out the asteroid. The modified heat/diffusion equation is now no longer analytically solvable, so we rely on thenumerical scheme to illuminate what's going on! 
   
+Directions for exploration and evaluation:
   
-  
+  The main code is located in "PDE_Solver.py". Please run the file "MAINFILE_AsteroidPDESolver.ipynb", which calls the functions in the .py file. Included in the notebook are testing, visualization of results, and descriptions/analysis of the results.
 
