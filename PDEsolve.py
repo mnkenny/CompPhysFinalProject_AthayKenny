@@ -22,10 +22,11 @@ class pde_solver():
 
     Contains:
     -----
-    * numerical(): 
-    * numerical_const():
-    * numerical_plus_radiative():
-    * analytic_const():
+    * numerical(): Solves the pde for sinusoidal boundary
+    * numerical_const(): Solves the pde for constant boundary
+    * numerical_plus_radiative(): Solves the pde for sinusoidal boundaries acounting for radiative loss
+    * analytic(): Analytic solution for sinusoidal boundary and infinite size 
+    * analytic_const(): Analytic solution for const boundary and infinite size 
     """    
 
     def __init__(self,zp,dz,zc,cf,tp,kappa,omegap, T0,mu,k_th):
@@ -62,33 +63,36 @@ class pde_solver():
         self.T=None
         self.T_rad=None
         self.T_const=None
+        self.T_sol=None
         self.T_const_sol=None
     def numerical(self,double=True):
         """
         Function to compute, with centered finite differences, the temperature evolution in an asteroid 
         rotating in space. Boundary conditions are,
-        T(t,z=0) = (T0/2) - (T0/2)*cos(w*t).
+        T(t,z=0) = T0*cos(w*t).
         and
         T(t,z=z_max) = 0 -- double = False
-        T(t,z=z_max) = (T0/2) = (T0/2)*cos(w*t) --double = True
-        Args:
+        T(t,z=z_max) = -T0*cos(w*t) --double = True
         
-        * double:  True or False, default is True. Toggle for using 1 or 2 non-zero oscillatng boundary 
+        Args:
+        -----
+        * double: True or False, default is True. Toggle for using 1 or 2 non-zero oscillatng boundary 
         conditions
 
         Updates:
+        -----
         * T: the temperature profiles in 1-D at every time step. T is an NtxNz array
-
         """  
         self.T=np.zeros((self.Nt, self.Nz))
 
-        # Insert boundary conditions
-        self.T[:,0] =self.T0/2-self.T0/2*np.cos(self.w*self.t)
+        # Insert boundary conditionsself.T0/2-
+        self.T[:,0] =self.T0*np.cos(self.w*self.t)
         if double:
-            self.T[:,-1] = self.T0/2+self.T0/2*np.cos(self.w*self.t)
+            self.T[:,-1] = -self.T0*np.cos(self.w*self.t)
         for i in range(1, self.Nt):
             # Compute T at inner mesh points
-            self.T[i,1:-1] =  self.T[i-1,1:-1] + self.r * (self.T[i-1,2:] - 2*self.T[i-1,1:-1] + self.T[i-1,:-2]) 
+            self.T[i,1:-1] =  self.T[i-1,1:-1] + self.r * (self.T[i-1,2:] - 2*self.T[i-1,1:-1] + 
+                                                           self.T[i-1,:-2]) 
 
   
 
@@ -101,43 +105,47 @@ class pde_solver():
         T(t,z=z_max) = 0
 
         Args:
+        -----
         None
 
         Updates:
+        -----
         * T_const: the temperature profiles in 1-D at every time step. T_const is an NtxNz array
-
         """
         self.T_const=np.zeros((self.Nt, self.Nz))
         self.T_const[:,0] = self.T0
         for i in range(1, self.Nt):
             # Compute u at inner mesh points
-            self.T_const[i,1:-1] =  self.T_const[i-1,1:-1] + self.r * (self.T_const[i-1,2:] - 2*self.T_const[i-1,1:-1] + self.T_const[i-1,:-2]) 
+            self.T_const[i,1:-1] =  self.T_const[i-1,1:-1] + self.r * (self.T_const[i-1,2:] - 2*self.T_const[i-1,1:-1] +
+                                                                       self.T_const[i-1,:-2]) 
         
         
     def numerical_plus_radiative(self, double=True):
         """
         Function to compute the modified diffusion equation, that with a radiative loss term, describing an 
-        asteroid which can lose heat at its boundary to its surroundings
+        asteroid which can lose heat at its boundary to its surroundings.
 
         Args:
+        -----
         * double: True or False, default is True. Toggle for using 1 or 2 non-zero oscillatng boundary 
             conditions
 
         Updates:
-        *T_rad: the temperature profiles in 1-D at every time step. T_rrad is an NtxNz array
-
+        -----
+        *T_rad: the temperature profiles in 1-D at every time step. T_rad is an NtxNz array
         """
         self.T_rad=np.zeros((self.Nt, self.Nz))
         str_len = 0
         
         # Insert boundary conditions
-        self.T_rad[:,0] =self.T0/2- self.T0/2*np.cos(self.w*self.t)
+        self.T_rad[:,0] =self.T0*np.cos(self.w*self.t)
         if double:
-            self.T_rad[:,-1] = self.T0/2+self.T0/2*np.cos(self.w*self.t)
+            self.T_rad[:,-1] =-self.T0*np.cos(self.w*self.t)
             for i in range(1, self.Nt):
                 
                 # Compute u at inner mesh points :
-                self.T_rad[i,1:-1] =  self.T_rad[i-1,1:-1] + self.r * (self.T_rad[i-1,2:] - 2*self.T_rad[i-1,1:-1] + self.T_rad[i-1,:-2]) 
+                self.T_rad[i,1:-1] =  self.T_rad[i-1,1:-1] + self.r * (self.T_rad[i-1,2:] - 2*self.T_rad[i-1,1:-1] +
+                                                                       self.T_rad[i-1,:-2]) 
                 
                 #Update boundary Temperature if source temperature is less than temp. at inner cell
                 if self.T_rad[i,-1]<self.T_rad[i,-2]:
@@ -148,12 +156,36 @@ class pde_solver():
             for i in range(1, self.Nt):
                 
                 # Compute u at inner mesh points
-                self.T_rad[i,1:-1] =  self.T_rad[i-1,1:-1] + self.r * (self.T_rad[i-1,2:] - 2*self.T_rad[i-1,1:-1] + self.T_rad[i-1,:-2]) 
+                self.T_rad[i,1:-1] =  self.T_rad[i-1,1:-1] + self.r *(self.T_rad[i-1,2:] - 2*self.T_rad[i-1,1:-1] +
+                                                                      self.T_rad[i-1,:-2]) 
                 
                 #Update boundary Temperature if source temperature is less than temp. at inner cell
                 self.T_rad[i,-1]=self.T_rad[i,-2]-self.d*(self.T_rad[i,-2]**4)
  
-       
+    def analytic(self):
+        """
+        Function for the analytic solution to the temperature evolution in 1-D from
+        an oscillating heat source. Boundary conditions are,
+        T(t,z=0) = T0*cos(w*t).
+        and
+        T(t,z=z_max) = 0
+
+        Args:
+        -----
+        None
+
+        Updates:
+        -----
+        * T_sol: the analytic temperature profiles in 1-D at every time step. T_sol is an NtxNz array
+        """
+        from scipy import special
+        t_a=self.t.reshape(self.Nt,1)
+        z_a=self.z.reshape(1,self.Nz)
+        self.k =np.sqrt(self.w/(2*self.kappa))
+        self.T_sol=np.zeros((self.Nt, self.Nz))
+        for i in range(1, self.Nt): 
+            self.T_sol[i]=(np.exp(-self.k*self.z)*self.T0*np.cos(self.k*self.z-self.w*self.t[i]))
+   
         
     def analytic_const(self):
         """
@@ -164,11 +196,12 @@ class pde_solver():
         T(t,z=z_max) = 0
 
         Args:
+        -----
         None
 
         Updates:
-        * T_const_sol: the analytictemperature profiles in 1-D at every time step. T_const is an NtxNz array
-
+        -----
+        * T_const_sol: the analytictemperature profiles in 1-D at every time step. T_const_sol is an NtxNz array
         """
         from scipy import special
         self.T_const_sol=np.zeros((self.Nt, self.Nz))
