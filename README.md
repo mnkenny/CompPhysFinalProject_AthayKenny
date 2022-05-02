@@ -8,15 +8,15 @@
 
 Asteroids typically rotate with perdiods between four hours and 24 hours and have diameters ranging from 10m to 500km! We explore different parameter values based on known quantities (or ranges of quantities) but in some cases have to make  guesses for parameters for which we could not find data. 
   
-This one-dimensional heat equation is analytically solvable, so we can compare our numerical solutions to analytic ones, which is our primary testing mechanism of our numerical solution. Here is an example of what the diffusion looks like as solved by our numerical algorithm
+This one-dimensional heat equation is analytically solvable, so we can compare our numerical solutions to analytic ones, which is our primary testing mechanism of our numerical solution. Here is an example of what the diffusion looks like as solved by our numerical algorithm for the case of a constant heat source (first plot) and a sinusoidal/oscillating heat source:
   
-![image](https://user-images.githubusercontent.com/70778637/166007559-bdb98aab-229a-4e19-9c44-7cb6c411be21.png)
+![image](https://user-images.githubusercontent.com/70778637/166294874-61ad4117-47a4-4f6d-abae-6b5961690ca2.png)
+  
+![image](https://user-images.githubusercontent.com/70778637/166294930-83f7743b-69b5-418a-9344-8d7a100dfb9c.png)
 
-for the following parameter values:
+Both of these plots are in the (main) Python notebook with descriptions and explanations. There inclusion here is to give a sneak peak of what's to come!
   
-L (diameter) = 50 m, total time = 50,000 s, incoming temperature = 1 K, <img src="https://render.githubusercontent.com/render/math?math=\kappa"> (diffusion coefficient) = 1.5 m^2/s, and <img src="https://render.githubusercontent.com/render/math?math=\omega"> (rotation rate) = 5e-4 Hz.
-  
-We have added an additional term to the simple (1D) diffusion equation- a radiative loss term- to explore more interesting physics: what happens when the heat can leak out the asteroid. The modified heat/diffusion equation is now no longer analytically solvable, so we rely on thenumerical scheme to illuminate what's going on! 
+Additionally, we have added another to the simple (1D) diffusion equation- a radiative loss term- to explore more interesting physics: what happens when the heat can leak out the asteroid at the boundaries. The modified heat/diffusion equation is now no longer analytically solvable, so we rely on thenumerical scheme to illuminate what's going on! 
   
 ### <center> Directions for exploration and evaluation:
   
