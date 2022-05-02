@@ -13,5 +13,5 @@ Additionally, we have added another to the simple (1D) diffusion equation- a rad
   
 ### <center> Directions for exploration and evaluation:
   
-  The main code is located in "PDE_Solver.py". Please run the file "MAINFILE_AsteroidPDESolver.ipynb", which calls the functions in the .py file. Included in the notebook are testing, visualization of results, and descriptions/analysis of the results.
+  The main code is located in "PDEsolve.py". Please run the file "MAINFILE_AsteroidPDESolver.ipynb", which calls the functions in the .py file. Included in the notebook are testing, visualization of results, and descriptions/analysis of the results.
 
