@@ -9,16 +9,16 @@ class pde_solver():
     
     Arguments:
     -----
-    * zp: non-dimensional total length
-    * dz: dimenional spatial step
-    * zc:charachteristic length scae for non-dimensionalization
-    * cf:cfl condition fraction --> dt = cf*(dx^2/(2*kappa))
+    * zp: non-dimensional total length, zp = 1 (suggested)
+    * dz: dimenional spatial step,  !!THIS HAS UNITS!!
+    * zc: charachteristic length scale for non-dimensionalization, easiest choice = 1
+    * cf: cfl condition fraction --> dt = cf*(dx^2/(2*kappa))
     * tp: non-dimensional total time
-    * kappa:diffusion coeffecient
-    * omegap: frequency
-    * T0: initial condition 
+    * kappa: diffusion coeffecient
+    * omega: frequency !!THIS HAS UNITS!! Typical values for an asteroid are (1E-5 - 7E-5)Hz
+    * T0: amplitude of source temperature !!THIS HAS UNITS!!
     * mu: physical characteristics constant
-    * k_th: thermal conductivity 
+    * k_th: thermal conductivity, typically ~ 4 for an asteroid
 
     Contains:
     -----
@@ -29,7 +29,7 @@ class pde_solver():
     * analytic_const(): Analytic solution for const boundary and infinite size 
     """    
 
-    def __init__(self,zp,dz,zc,cf,tp,kappa,omegap, T0,mu,k_th):
+    def __init__(self,zp,dz,zc,cf,tp,kappa,omega,T0,mu,k_th):
     
         self.k_th=k_th
         self.kappa=kappa
@@ -51,7 +51,7 @@ class pde_solver():
         self.Nt=len(self.t)
         self.tp=np.linspace(0,tp,self.Nt) 
         
-        self.w=omegap
+        self.w=omega
         self.wc=1/self.tc
         self.wp=self.w/self.wc
 
@@ -85,7 +85,7 @@ class pde_solver():
         """  
         self.T=np.zeros((self.Nt, self.Nz))
 
-        # Insert boundary conditionsself.T0/2-
+        # Insert boundary conditions
         self.T[:,0] =self.T0*np.cos(self.w*self.t)
         if double:
             self.T[:,-1] = -self.T0*np.cos(self.w*self.t)
@@ -113,6 +113,7 @@ class pde_solver():
         * T_const: the temperature profiles in 1-D at every time step. T_const is an NtxNz array
         """
         self.T_const=np.zeros((self.Nt, self.Nz))
+        # Insert boundary conditions
         self.T_const[:,0] = self.T0
         for i in range(1, self.Nt):
             # Compute u at inner mesh points
@@ -147,7 +148,7 @@ class pde_solver():
                 self.T_rad[i,1:-1] =  self.T_rad[i-1,1:-1] + self.r * (self.T_rad[i-1,2:] - 2*self.T_rad[i-1,1:-1] +
                                                                        self.T_rad[i-1,:-2]) 
                 
-                #Update boundary Temperature if source temperature is less than temp. at inner cell
+                #Update boundary temperature if source temperature is less than temp. at inner cell
                 if self.T_rad[i,-1]<self.T_rad[i,-2]:
                     self.T_rad[i,-1]=self.T_rad[i,-2]-self.d*(self.T_rad[i,-2]**4-self.T_rad[i,-1]**4) 
                 if self.T_rad[i,0]<self.T_rad[i,1]:
@@ -159,7 +160,7 @@ class pde_solver():
                 self.T_rad[i,1:-1] =  self.T_rad[i-1,1:-1] + self.r *(self.T_rad[i-1,2:] - 2*self.T_rad[i-1,1:-1] +
                                                                       self.T_rad[i-1,:-2]) 
                 
-                #Update boundary Temperature if source temperature is less than temp. at inner cell
+                #Update boundary temperature if source temperature is less than temp. at inner cell
                 self.T_rad[i,-1]=self.T_rad[i,-2]-self.d*(self.T_rad[i,-2]**4)
  
     def analytic(self):
@@ -178,9 +179,6 @@ class pde_solver():
         -----
         * T_sol: the analytic temperature profiles in 1-D at every time step. T_sol is an NtxNz array
         """
-        from scipy import special
-        t_a=self.t.reshape(self.Nt,1)
-        z_a=self.z.reshape(1,self.Nz)
         self.k =np.sqrt(self.w/(2*self.kappa))
         self.T_sol=np.zeros((self.Nt, self.Nz))
         for i in range(1, self.Nt): 
